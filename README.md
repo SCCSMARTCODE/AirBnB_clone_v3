@@ -61,7 +61,8 @@ Classes inherited from Base Model:
 * `def save(self)` - serializes __objects to the JSON file (path: __file_path)
 * ` def reload(self)` -  deserializes the JSON file to __objects
 
-#### `/tests` directory contains all unit test cases for this project:
+#### `/tests` directory contains all unit test cases for this project
+
 [/test_models/test_base_model.py](/tests/test_models/test_base_model.py) - Contains the TestBaseModel and TestBaseModelDocs classes
 TestBaseModelDocs class:
 * `def setUpClass(cls)`- Set up for the doc tests
@@ -126,9 +127,9 @@ TestBaseModel class:
 * `def test_user_module_docstring(self)` - Test for the user.py module docstring
 * `def test_user_class_docstring(self)` - Test for the User class docstring
 
-
 ## Examples of use
-```
+
+```bash
 vagrantAirBnB_clone$./console.py
 (hbnb) help
 
@@ -151,12 +152,21 @@ EOF  all  create  destroy  help  quit  show  update
 ```
 
 ## Bugs
+
 No known bugs at this time. 
 
 ## Authors
+
 Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
 Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)
 
 Second part of Airbnb: Joann Vuong
+
+## Contributors
+
+Emmanuel Ayobami - [Github](https://github.com/SCCSMARTCODE/) / [Twitter](#)  
+John-Livingproof Fowowe - [Github](https://github.com/johnlivingprooff/) / [Twitter](https://twitter.com/ola0luwajj)
+
 ## License
-Public Domain. No copy write protection. 
+
+Public Domain. No copy write protection.
