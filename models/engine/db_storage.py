@@ -79,12 +79,9 @@ class DBStorage:
         """Returns the object based on
         the class and its ID, or None if not found"""
 
-        # gets the class obj from classes dict
-        cls_obj = classes.get(cls)
-
         # query the database for obj with given id
-        if cls_obj:
-            obj = self.__session.query(cls_obj).filter_by(id=id).first()
+        if cls:
+            obj = self.__session.query(cls).get(id)
             return obj
         else:
             return None

@@ -107,6 +107,12 @@ test_db_storage.py'])
 
         self.assertTrue(self.storage.get(State, stateO.id) is not None)
 
+    def test_get_no_id(self):
+        """Test get no id"""
+        with self.assertRaises(TypeError):
+            self.assertTrue(self.storage.get(cls=State) is not None)
+
+
     def test_count_all_objects(self):
         """Test counting all objects"""
         count = self.storage.count()
