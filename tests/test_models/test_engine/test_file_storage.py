@@ -70,6 +70,12 @@ test_file_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
+    @classmethod
+    def setUpClass(cls):
+        """set up"""
+        cls.storage = FileStorage()
+        cls.state = State(name="California", id="cali-01")
+
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
@@ -131,3 +137,38 @@ class TestFileStorage(unittest.TestCase):
         """Test counting all objects"""
         count = self.storage.count()
         self.assertGreaterEqual(count, 0)
+
+
+class TestFileStorage2(unittest.TestCase):
+    """Test get method"""
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """test doc doc"""
+        models.storage._FileStorage__objects = {}
+        state1 = State(name="Alabama")
+        models.storage.new(state1)
+        models.storage.save()
+        first_state = list(models.storage.all().values())[0]
+        first_state_id = first_state.id
+        get = models.storage.get(State, first_state_id)
+        self.assertEqual(get.id, first_state_id)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Test count method"""
+        models.storage._FileStorage__objects = {}
+        state1 = State(name="California")
+        state2 = State(name="Georgia")
+        state3 = State(name="Texas")
+
+        models.storage.new(state1)
+        models.storage.new(state2)
+        models.storage.new(state3)
+
+        models.storage.save()
+        total = len(models.storage.all())
+        total_state = len(models.storage.all(State))
+        count_total = models.storage.count()
+        count_state = models.storage.count(State)
+        self.assertEqual(total, count_total)
+        self.assertEqual(total_state, count_state)
