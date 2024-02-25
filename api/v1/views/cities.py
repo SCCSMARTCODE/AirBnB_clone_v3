@@ -3,13 +3,14 @@
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
+from models.state import State
 from models.city import City
 
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'])
 def cities_by_states(state_id):
     """Retrieves the list of all City objects of a State"""
-    state = storage.get('State', state_id)
+    state = storage.get(State, state_id)
     if state is None:
         abort(404, 'Not found')
     cities = [city.to_dict for city in state.cities]
@@ -21,13 +22,13 @@ def cities_by_states(state_id):
                  strict_slashes=False)
 def cities_by_id(city_id):
     """Handles Cities requests"""
-    city = storage.get('City', city_id)
+    city = storage.get(City, city_id)
     if city is None:
         abort(404, 'Not found')
 
     if request.method == 'GET':
         return jsonify(city.to_dict())
-    
+
     if request.method == 'DELETE':
         city.delete()
         del city
@@ -42,7 +43,7 @@ def cities_by_id(city_id):
                 setattr(city, k, v)
         city.save()
         return jsonify(city.to_dict()), 200
-    
+
     if request.method == 'POST':
         data = request.get_json()
         if not data:
