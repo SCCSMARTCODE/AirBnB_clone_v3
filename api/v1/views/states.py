@@ -9,7 +9,7 @@ from models.state import State
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def list_states():
     """Retrieves the list of all State objects:"""
-    states = storage.all('State')
+    states = storage.all(State)
     all_states = list(obj.to_dict() for obj in states.values())
     return jsonify(all_states)
 
@@ -19,7 +19,7 @@ def list_states():
                  strict_slashes=False)
 def list_state_with_id(state_id=None):
     """Retrieves a State object"""
-    state = storage.get('State', state_id)
+    state = storage.get(State, state_id)
     if state is None:
         abort(404, "Not found")
 
