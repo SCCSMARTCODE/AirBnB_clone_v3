@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """Flask App"""
 import os
 from flask import Flask, jsonify
