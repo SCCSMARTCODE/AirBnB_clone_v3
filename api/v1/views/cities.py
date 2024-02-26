@@ -68,8 +68,8 @@ def cities_by_id(city_id):
         if not data:
             abort(400, 'Not a JSON')
 
-    for key, val in data.items():
-        if key not in ["id", "created_at", "updated_at", "state_id"]:
-            setattr(city, key, val)
-    city.save()
-    return jsonify(city.to_json())
+        for key, val in data.items():
+            if key not in ["id", "created_at", "updated_at", "state_id"]:
+                setattr(city, key, val)
+        city.save()
+        return jsonify(city.to_json())
