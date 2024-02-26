@@ -54,9 +54,9 @@ def get_place_by_id(place_id=None):
         places_json = request.get_json(silent=True)
         if not places_json:
             abort(400, 'Not a JSON')
+        keylist = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
         for k, v in places_json.items():
-            if k not in ['id', 'user_id', 'city_id', 'created_at',
-                         'updated_at']:
+            if k not in keylist:
                 setattr(place, k, v)
         place.save()
         return jsonify(place.to_dict())
