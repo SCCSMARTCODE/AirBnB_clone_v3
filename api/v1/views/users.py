@@ -42,7 +42,7 @@ def create_user():
     if 'password' not in data:
         abort(400, 'Missing password')
 
-    ##new = User(**data)
+    new = User(**data)
     new.save()
     return jsonify(new.to_dict()), 201
 
