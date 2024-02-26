@@ -40,10 +40,8 @@ def city_create(state_id):
 
     new_city = City(**city_json)
     new_city.save()
-    resp = jsonify(new_city.to_dict())
-    resp.status_code = 201
 
-    return resp
+    return jsonify(new_city.to_dict()), 201
 
 
 @app_views.route('/cities/<city_id>',
