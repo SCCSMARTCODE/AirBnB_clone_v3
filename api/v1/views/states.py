@@ -19,9 +19,9 @@ def list_all_states():
                  strict_slashes=False)
 def list_states(state_id=None):
     """Retrieves a State object"""
-    state = storage.get(State, state_id)
+    state = storage.get(State, str(state_id))
     if state is None:
-        abort(404, "Not found")
+        abort(404)
 
     if request.method == 'GET':
         return jsonify(state.to_dict())
@@ -63,12 +63,12 @@ def state_delete_by_id(state_id):
     :return: empty dict with 200 or 404 if not found
     """
 
-    fetched_obj = storage.get("State", str(state_id))
+    obj = storage.get("State", str(state_id))
 
-    if fetched_obj is None:
+    if obj None:
         abort(404)
 
-    storage.delete(fetched_obj)
+    storage.delete(obj)
     storage.save()
 
     return jsonify({})
