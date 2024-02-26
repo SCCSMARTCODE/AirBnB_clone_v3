@@ -22,13 +22,13 @@ def list_states(state_id=None):
     else:
         state = storage.get(State, state_id)
         if state is None:
-            abort(404)
+            abort(404, "Not found")
 
         if request.method == 'GET':
             return jsonify(state.to_dict())
 
     if request.method == 'PUT':
-        data = request.get_json()
+        data = request.get_json(silent=True)
         if not data:
             abort(400, 'Not a JSON')
         state.name = data.get('name', state.name)
@@ -50,7 +50,8 @@ def state_create():
 
     new_state = State(**state_json)
     new_state.save()
-    # return jsonify(new_state.to_dict()), 201
+    return jsonify(new_state.to_dict()), 201
+    # check 13 - no issue
 
 
 @app_views.route("/states/<state_id>", methods=["DELETE"],
