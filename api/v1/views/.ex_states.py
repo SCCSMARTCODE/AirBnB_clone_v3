@@ -6,32 +6,34 @@ from models import storage
 from models.state import State
 
 
-# @app_views.route('/states', methods=['GET'], strict_slashes=False)
-# def list_all_states():
-#     """Retrieves the list of all State objects:"""
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
+def list_all_states():
+    """Retrieves the list of all State objects:"""
+    states = storage.all(State)
+    all_states = list(obj.to_dict() for obj in states.values())
+    return jsonify(all_states)
+
+
 @app_views.route('/states/<state_id>',
                  methods=['GET', 'PUT'],
                  strict_slashes=False)
 def list_states(state_id=None):
     """Retrieves a State object"""
-    if state_id is None:
-        states = storage.all(State)
-        all_states = list(obj.to_dict() for obj in states.values())
-        return jsonify(all_states)
-    else:
-        state = storage.get(State, state_id)
-        if state is None:
-            abort(404)
+    state = storage.get(State, str(state_id))
+    if state is None:
+        abort(404)
 
-        if request.method == 'GET':
-            return jsonify(state.to_dict())
+    if request.method == 'GET':
+        return jsonify(state.to_dict())
 
     if request.method == 'PUT':
         data = request.get_json()
         if not data:
             abort(400, 'Not a JSON')
-        state.name = data.get('name', state.name)
+
+        for key, val in data.items():
+        if key not in ["id", "created_at", "updated_at"]:
+            setattr(state, key, val)
         state.save()
         return jsonify(state.to_dict()), 200
 
@@ -50,7 +52,7 @@ def state_create():
 
     new_state = State(**state_json)
     new_state.save()
-    # return jsonify(new_state.to_dict()), 201
+    return jsonify(new_state.to_dict()), 201
 
 
 @app_views.route("/states/<state_id>", methods=["DELETE"],
@@ -62,12 +64,16 @@ def state_delete_by_id(state_id):
     :return: empty dict with 200 or 404 if not found
     """
 
+<<<<<<< HEAD
+    obj = storage.get(State, state_id)
+=======
     fetched_obj = storage.get(State, state_id)
+>>>>>>> f96289e974ca9a87f5262de881e9815529bb7a9e
 
-    if fetched_obj is None:
+    if obj None:
         abort(404)
 
-    storage.delete(fetched_obj)
+    storage.delete(obj)
     storage.save()
 
     return jsonify({}), 200
