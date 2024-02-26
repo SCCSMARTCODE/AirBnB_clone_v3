@@ -4,10 +4,12 @@ import os
 from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
+from flask_cors import CORS
 
 # Create a Flask instance
 app = Flask(__name__)
 app.register_blueprint(app_views)
+CORS(app, resources={'/*': {'origins': '0.0.0.0'}})
 
 
 # Define a method to handle @app.teardown_appcontext that calls storage.close()
