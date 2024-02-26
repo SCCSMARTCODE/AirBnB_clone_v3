@@ -12,7 +12,6 @@ def list_states():
     all_states = list(obj.to_dict() for obj in states.values())
     return jsonify(all_states)
 
-@app_views.route('/states', methods=['GET'], strict_slashes=False)
 @app_views.route('/states/<state_id>',
                  methods=['GET', 'PUT'],
                  strict_slashes=False)
