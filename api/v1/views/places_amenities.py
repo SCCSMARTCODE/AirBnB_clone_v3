@@ -1,12 +1,15 @@
 #!/usr/bin/python3
-
 """
 route for handling place and amenities linking
 """
-from flask import jsonify, abort
+from api.v1.views import app_views
+from flask import jsonify, request, abort
+from models import storage
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
 from os import getenv
-
-from api.v1.views import app_views, storage
+db = getenv('HBNB_TYPE_STORAGE')
 
 
 @app_views.route("/places/<place_id>/amenities",
@@ -18,7 +21,7 @@ def amenity_by_place(place_id):
     :param place_id: amenity id
     :return: all amenities
     """
-    fetched_obj = storage.get(Place, place_id)
+    fetched_obj = storage.get(Place, str(place_id))
 
     all_amenities = []
 
