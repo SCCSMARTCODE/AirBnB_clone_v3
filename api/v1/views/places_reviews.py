@@ -12,16 +12,15 @@ from models.review import Review
 def reviews_by_place(place_id):
     """
     retrieves all Review objects by place
-    :return: json of all reviews
     """
     review_list = []
-    place_obj = storage.get(Place, str(place_id))
+    place_obj = storage.get(Place, place_id)
 
     if place_obj is None:
         abort(404)
 
     for obj in place_obj.reviews:
-        review_list.append(obj.to_json())
+        review_list.append(obj.to_dict())
 
     return jsonify(review_list)
 
@@ -31,7 +30,6 @@ def reviews_by_place(place_id):
 def review_create(place_id):
     """
     create REview route
-    :return: newly created Review obj
     """
     review_json = request.get_json(silent=True)
     if review_json is None:
@@ -49,10 +47,8 @@ def review_create(place_id):
 
     new_review = Review(**review_json)
     new_review.save()
-    resp = jsonify(new_review.to_dict())
-    resp.status_code = 201
 
-    return resp
+    return jsonify(new_review.to_dict()), 201
 
 
 @app_views.route("/reviews/<review_id>",  methods=["GET"],
@@ -77,8 +73,6 @@ def review_by_id(review_id):
 def review_put(review_id):
     """
     updates specific Review object by ID
-    :param review_id: Review object ID
-    :return: Review object and 200 on success, or 400 or 404 on failure
     """
     place_json = request.get_json(silent=True)
 
