@@ -5,12 +5,14 @@ from flask import jsonify, abort, request
 from models import storage
 from models.state import State
 
+
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def list_all_states():
     """Retrieves the list of all State objects:"""
     states = storage.all(State)
     all_states = list(obj.to_dict() for obj in states.values())
     return jsonify(all_states)
+
 
 @app_views.route('/states/<state_id>',
                  methods=['GET', 'PUT'],
@@ -28,11 +30,10 @@ def list_states(state_id=None):
         data = request.get_json()
         if not data:
             abort(400, 'Not a JSON')
-        for key, value in data.items():
-            if key not in ['id', 'created_at', 'updated_at']:
-                setattr(state, key, value)
+        # state.name = data.get('name', state.name)
         state.save()
         return jsonify(state.to_dict()), 200
+
 
 @app_views.route("/states", methods=["POST"], strict_slashes=False)
 def state_create():
@@ -50,6 +51,7 @@ def state_create():
     new_state.save()
     return jsonify(new_state.to_dict()), 201
 
+
 @app_views.route("/states/<state_id>", methods=["DELETE"],
                  strict_slashes=False)
 def state_delete_by_id(state_id):
@@ -59,7 +61,7 @@ def state_delete_by_id(state_id):
     :return: empty dict with 200 or 404 if not found
     """
 
-    fetched_obj = storage.get("State", str(state_id))
+    fetched_obj = storage.get(State, state_id)
 
     if fetched_obj is None:
         abort(404)
@@ -67,4 +69,4 @@ def state_delete_by_id(state_id):
     storage.delete(fetched_obj)
     storage.save()
 
-    return jsonify({})
+    return jsonify({}), 200
