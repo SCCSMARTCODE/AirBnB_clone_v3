@@ -12,8 +12,8 @@ def all_users(user_id):
     """retrieves all users"""
     user_list = []
     user_obj = storage.all(User)
-    ##for obj in user_obj.values():
-    ##  user_list.append(obj.to_dict())
+    for obj in user_obj.values():
+        user_list.append(obj.to_dict())
     return jsonify(user_list)
 
 
@@ -42,7 +42,7 @@ def create_user():
     if 'password' not in data:
         abort(400, 'Missing password')
 
-    new = User(**data)
+    ##new = User(**data)
     new.save()
     return jsonify(new.to_dict()), 201
 
