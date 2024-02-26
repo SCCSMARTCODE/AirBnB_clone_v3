@@ -15,7 +15,7 @@ def reviews_by_place(place_id):
     :return: json of all reviews
     """
     review_list = []
-    place_obj = storage.get("Place", str(place_id))
+    place_obj = storage.get(Place, str(place_id))
 
     if place_obj is None:
         abort(404)
@@ -36,9 +36,9 @@ def review_create(place_id):
     review_json = request.get_json(silent=True)
     if review_json is None:
         abort(400, 'Not a JSON')
-    if not storage.get("Place", place_id):
+    if not storage.get(Place, place_id):
         abort(404)
-    if not storage.get("User", review_json["user_id"]):
+    if not storage.get(User, review_json["user_id"]):
         abort(404)
     if "user_id" not in review_json:
         abort(400, 'Missing user_id')
@@ -49,7 +49,7 @@ def review_create(place_id):
 
     new_review = Review(**review_json)
     new_review.save()
-    resp = jsonify(new_review.to_json())
+    resp = jsonify(new_review.to_dict())
     resp.status_code = 201
 
     return resp
@@ -64,12 +64,12 @@ def review_by_id(review_id):
     :return: review obj with the specified id or error
     """
 
-    fetched_obj = storage.get("Review", str(review_id))
+    fetched_obj = storage.get(Review, review_id)
 
     if fetched_obj is None:
         abort(404)
 
-    return jsonify(fetched_obj.to_json())
+    return jsonify(fetched_obj.to_dict())
 
 
 @app_views.route("/reviews/<review_id>",  methods=["PUT"],
@@ -85,7 +85,7 @@ def review_put(review_id):
     if place_json is None:
         abort(400, 'Not a JSON')
 
-    fetched_obj = storage.get("Review", str(review_id))
+    fetched_obj = storage.get(Review, review_id)
 
     if fetched_obj is None:
         abort(404)
@@ -97,7 +97,7 @@ def review_put(review_id):
 
     fetched_obj.save()
 
-    return jsonify(fetched_obj.to_json())
+    return jsonify(fetched_obj.to_dict())
 
 
 @app_views.route("/reviews/<review_id>",  methods=["DELETE"],
@@ -105,11 +105,9 @@ def review_put(review_id):
 def review_delete_by_id(review_id):
     """
     deletes Review by id
-    :param : Review object id
-    :return: empty dict with 200 or 404 if not found
     """
 
-    fetched_obj = storage.get("Review", str(review_id))
+    fetched_obj = storage.get(Review, review_id)
 
     if fetched_obj is None:
         abort(404)
