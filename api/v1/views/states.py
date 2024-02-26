@@ -15,7 +15,7 @@ def list_states():
 
 
 @app_views.route('/states/<state_id>',
-                 methods=['GET', 'POST', 'DELETE', 'PUT'],
+                 methods=['GET', 'PUT'],
                  strict_slashes=False)
 def list_state_with_id(state_id=None):
     """Retrieves a State object"""
@@ -26,21 +26,6 @@ def list_state_with_id(state_id=None):
     if request.method == 'GET':
         return jsonify(state.to_dict())
 
-    if request.method == 'DELETE':
-        state.delete()
-        del state
-        return jsonify({}), 200
-
-    if request.method == 'POST':
-        data = request.get_json()
-        if not data:
-            abort(400, 'Not a JSON')
-        if 'name' not in data:
-            abort(400, 'Missing name')
-        new_state = State(data)
-        new_state.save()
-        return jsonify(new_state.to_dict()), 201
-
     if request.method == 'PUT':
         data = request.get_json()
         if not data:
@@ -50,3 +35,38 @@ def list_state_with_id(state_id=None):
                 setattr(state, key, value)
         state.save()
         return jsonify(state.to_dict()), 200
+
+@app_views.route("/states", methods=["POST"], strict_slashes=False)
+def state_create():
+    """
+    create state route
+    :return: newly created state obj
+    """
+    state_json = request.get_json(silent=True)
+    if state_json is None:
+        abort(400, 'Not a JSON')
+    if "name" not in state_json:
+        abort(400, 'Missing name')
+
+    new_state = State(**state_json)
+    new_state.save()
+    return jsonify(new_state.to_dict()), 201i
+
+@app_views.route("/states/<state_id>", methods=["DELETE"],
+                 strict_slashes=False)
+def state_delete_by_id(state_id):
+    """
+    deletes State by id
+    :param state_id: state object id
+    :return: empty dict with 200 or 404 if not found
+    """
+
+    fetched_obj = storage.get("State", str(state_id))
+
+    if fetched_obj is None:
+        abort(404)
+
+    storage.delete(fetched_obj)
+    storage.save()
+
+    return jsonify({})
