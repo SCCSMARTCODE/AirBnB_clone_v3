@@ -11,7 +11,7 @@ from models.user import User
 def all_users(user_id):
     """retrieves all users"""
     user_list = []
-    user_obj = storage.all("User")
+    user_obj = storage.all(User)
     for obj in user_obj.values():
         user_list.append(obj.to_dict())
     return jsonify(user_list)
@@ -23,7 +23,7 @@ def user_by_id(user_id):
     gets User by ID
     """
 
-    obj = storage.get("User", str(user_id))
+    obj = storage.get(User, str(user_id))
 
     if obj is None:
         abort(404)
