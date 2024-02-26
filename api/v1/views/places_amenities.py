@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """
 route for handling place and amenities linking
+=======
+Link with Place & Amenity
+
 """
 from api.v1.views import app_views
 from flask import jsonify, request, abort
