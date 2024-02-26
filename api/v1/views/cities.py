@@ -40,7 +40,7 @@ def city_create(state_id):
 
     new_city = City(**city_json)
     new_city.save()
-    resp = jsonify(new_city.to_json())
+    resp = jsonify(new_city.to_dict())
     resp.status_code = 201
 
     return resp
