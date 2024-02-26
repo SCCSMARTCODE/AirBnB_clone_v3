@@ -6,21 +6,29 @@ from models import storage
 from models.user import User
 
 
-@app_views.route('/users', methods=['GET'], strict_slashes=False)
-@app_views.route('/users/<user_id>', methods=['GET', 'DELETE'],
+@app_views.route('/users', methods=['GET'],
                  strict_slashes=False)
-def users(user_id):
-    """retrieves user by id, or all users"""
-    if user_id is None:
-        users = storage.all(User)
-        all_users = list(user.to_dict() for user in users.values())
-        return jsonify(all_users)
-    else:
-        user = storage.get(User, user_id)
-        if user is None:
-            abort(404)
-        if request.method == 'GET':
-            return jsonify(user.to_dict())
+def all_users(user_id):
+    """retrieves all users"""
+    user_list = []
+    user_obj = storage.all("User")
+    for obj in user_obj.values():
+        user_list.append(obj.to_dict())
+    return jsonify(user_list)
+
+
+@app_views.route("/users/<user_id>",  methods=["GET"], strict_slashes=False)
+def user_by_id(user_id):
+    """
+    gets User by ID
+    """
+
+    obj = storage.get("User", str(user_id))
+
+    if obj is None:
+        abort(404)
+
+    return jsonify(obj.to_dict())
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
