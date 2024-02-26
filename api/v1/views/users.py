@@ -41,21 +41,12 @@ def create_user():
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
 def update_user(user_id):
-<<<<<<< HEAD
-    """handle POST requests"""
-    user = storage.get(User, user_id)
-    if not user:
-        abort(404)
-
-    data = request.get_json(silent=True)
-=======
     """handle PUT requests"""
     user = storage.get(User, user_id)
     if user is None:
         abort(404)
 
     data = request.get_json(silent=True, force=True)
->>>>>>> 22e838829dbc0419b3ce3df702f817ec257bdc99
     if not data:
         abort(400, 'Not a JSON')
     user.password = data.get('password', user.password)
