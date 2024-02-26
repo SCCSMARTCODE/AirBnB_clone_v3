@@ -30,7 +30,7 @@ def city_create(state_id):
     if city_json is None:
         abort(400, 'Not a JSON')
 
-    if not storage.get("State", str(state_id)):
+    if not storage.get(State, state_id):
         abort(404)
 
     if "name" not in city_json:
