@@ -7,13 +7,14 @@ from models.state import State
 from models.city import City
 
 
-@app_views.route('/states/<state_id>/cities', methods=['GET'])
+@app_views.route('/states/<state_id>/cities', methods=['GET'],
+                 strict_slashes=False)
 def cities_by_states(state_id):
     """Retrieves the list of all City objects of a State"""
     state = storage.get(State, state_id)
     if state is None:
         abort(404, 'Not found')
-    cities = [city.to_dict for city in state.cities]
+    cities = list(city.to_dict() for city in state.cities)
     return jsonify(cities)
 
 
@@ -30,26 +31,24 @@ def cities_by_id(city_id):
         return jsonify(city.to_dict())
 
     if request.method == 'DELETE':
-        city.delete()
-        del city
+        storage.delete(city)
+        storage.save()
         return jsonify({}), 200
 
     if request.method == 'PUT':
-        data = request.get_json()
+        data = request.get_json(silent=True)
         if not data:
             abort(400, 'Not a JSON')
-        for k, v in data.items():
-            if k not in ['id', 'created_at', 'updated_at']:
-                setattr(city, k, v)
+        city.name = data.get('name', city.name)
         city.save()
         return jsonify(city.to_dict()), 200
 
     if request.method == 'POST':
-        data = request.get_json()
+        data = request.get_json(silent=True)
         if not data:
             abort(400, 'Not a JSON')
         if 'name' not in data:
             abort(400, 'Missing name')
-        new_city = City(data)
+        new_city = City(**data)
         new_city.save()
         return jsonify(new_city.to_dict()), 201
