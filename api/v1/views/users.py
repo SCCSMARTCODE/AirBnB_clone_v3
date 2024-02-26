@@ -23,7 +23,7 @@ def user_by_id(user_id):
     gets User by ID
     """
 
-    obj = storage.get(User, str(user_id))
+    obj = storage.get(User, user_id)
 
     if obj is None:
         abort(404)
