@@ -47,7 +47,7 @@ def city_create(state_id):
 
 
 @app_views.route('/cities/<city_id>',
-                 methods=['GET', 'POST', 'DELETE', 'PUT'],
+                 methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
 def cities_by_id(city_id):
     """Handles Cities requests"""
@@ -67,16 +67,9 @@ def cities_by_id(city_id):
         data = request.get_json(silent=True)
         if not data:
             abort(400, 'Not a JSON')
-        city.name = data.get('name', city.name)
-        city.save()
-        return jsonify(city.to_dict()), 200
 
-    if request.method == 'POST':
-        data = request.get_json(silent=True)
-        if not data:
-            abort(400, 'Not a JSON')
-        if 'name' not in data:
-            abort(400, 'Missing name')
-        new_city = City(**data)
-        new_city.save()
-        return jsonify(new_city.to_dict()), 201
+    for key, val in data.items():
+        if key not in ["id", "created_at", "updated_at", "state_id"]:
+            setattr(city, key, val)
+    city.save()
+    return jsonify(city.to_json())
