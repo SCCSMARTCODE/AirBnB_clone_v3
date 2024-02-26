@@ -5,12 +5,14 @@ from flask import jsonify, abort, request
 from models import storage
 from models.state import State
 
+
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def list_all_states():
     """Retrieves the list of all State objects:"""
     states = storage.all(State)
     all_states = list(obj.to_dict() for obj in states.values())
     return jsonify(all_states)
+
 
 @app_views.route('/states/<state_id>',
                  methods=['GET', 'PUT'],
@@ -34,6 +36,7 @@ def list_states(state_id=None):
         state.save()
         return jsonify(state.to_dict()), 200
 
+
 @app_views.route("/states", methods=["POST"], strict_slashes=False)
 def state_create():
     """
@@ -49,6 +52,7 @@ def state_create():
     new_state = State(**state_json)
     new_state.save()
     return jsonify(new_state.to_dict()), 201
+
 
 @app_views.route("/states/<state_id>", methods=["DELETE"],
                  strict_slashes=False)
