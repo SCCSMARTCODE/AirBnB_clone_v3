@@ -30,7 +30,10 @@ def list_states(state_id=None):
         data = request.get_json()
         if not data:
             abort(400, 'Not a JSON')
-        state.name = data.get('name', state.name)
+
+        for key, val in data.items():
+        if key not in ["id", "created_at", "updated_at"]:
+            setattr(state, key, val)
         state.save()
         return jsonify(state.to_dict()), 200
 
@@ -61,7 +64,11 @@ def state_delete_by_id(state_id):
     :return: empty dict with 200 or 404 if not found
     """
 
+<<<<<<< HEAD
     obj = storage.get(State, state_id)
+=======
+    fetched_obj = storage.get(State, state_id)
+>>>>>>> f96289e974ca9a87f5262de881e9815529bb7a9e
 
     if obj None:
         abort(404)
